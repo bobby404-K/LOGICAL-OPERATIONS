@@ -269,14 +269,14 @@ export const TruthTable: React.FC<TruthTableProps> = ({
               ))}
 
               {/* "+ Add Column" Header Button */}
-              <th className="w-36 px-3 py-3 align-middle text-center bg-slate-50 dark:bg-slate-900/50">
+              <th className={`${studentColumns.length === 0 ? 'w-64' : 'w-40'} px-3 py-3 align-middle text-center bg-indigo-50/40 dark:bg-indigo-950/20`}>
                 <button
                   type="button"
                   onClick={onAddColumn}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-indigo-400/60 dark:border-indigo-500/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-lg text-xs font-semibold transition active:scale-95"
+                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-indigo-500 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-xl text-xs font-bold shadow-2xs transition active:scale-95"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>New Col</span>
+                  <Plus className="w-4 h-4" />
+                  <span>{studentColumns.length === 0 ? '+ Add First Column (e.g. ¬t)' : '+ Add Column'}</span>
                 </button>
               </th>
             </tr>
@@ -367,7 +367,13 @@ export const TruthTable: React.FC<TruthTableProps> = ({
                   })}
 
                   {/* Empty cell under add column */}
-                  <td className="w-36 h-10 border-b border-slate-200/40 dark:border-slate-800/40 shrink-0" />
+                  {studentColumns.length === 0 ? (
+                    <td className="w-64 h-10 border-b border-slate-200/40 dark:border-slate-800/40 shrink-0 flex items-center justify-center text-[11px] text-slate-400 dark:text-slate-500 italic select-none">
+                      {rowIndex === 0 ? '👈 Click "+ Add First Column" above' : '—'}
+                    </td>
+                  ) : (
+                    <td className="w-40 h-10 border-b border-slate-200/40 dark:border-slate-800/40 shrink-0" />
+                  )}
                 </tr>
               );
             })}
