@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -45,18 +47,4 @@
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #475569;
-}
-
-/* Desmos-like subtle grid pattern */
-.math-grid-bg {
-  background-size: 24px 24px;
-  background-image: 
-    linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
-}
-
-.dark .math-grid-bg {
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
 }

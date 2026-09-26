@@ -27,7 +27,7 @@ export const TableCell: React.FC<TableCellProps> = ({
       type="button"
       onClick={onClick}
       onKeyDown={onKeyDown}
-      className={`w-full h-10 flex items-center justify-center font-mono font-bold text-sm select-none transition-all relative border-b border-r border-slate-200/80 dark:border-slate-800/80 focus:outline-none ${
+      className={`w-full h-full flex items-center justify-center font-mono font-bold text-sm select-none transition-all relative focus:outline-none ${
         isActive
           ? 'ring-2 ring-indigo-500 z-10 bg-indigo-50/50 dark:bg-indigo-950/40'
           : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'

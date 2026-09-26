@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Plus, Lock, CheckCheck, RotateCcw } from 'lucide-react';
 import { CellValue, StudentColumn, TruthAssignment, VariableName } from '../types';
@@ -23,6 +23,12 @@ interface TruthTableProps {
   onResetWorkspace: () => void;
 }
 
+// Consistent column width classes applied to BOTH header and virtualized rows
+const W_INDEX = 'w-14 min-w-[56px] max-w-[56px] shrink-0';
+const W_VAR = 'w-20 min-w-[80px] max-w-[80px] shrink-0';
+const W_STUDENT = 'w-56 min-w-[224px] max-w-[224px] shrink-0';
+const W_ADD = 'w-48 min-w-[192px] max-w-[192px] shrink-0';
+
 export const TruthTable: React.FC<TruthTableProps> = ({
   variables,
   rows,
@@ -41,12 +47,12 @@ export const TruthTable: React.FC<TruthTableProps> = ({
 }) => {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
-  // Virtualizer for smooth rendering up to 1024 rows
+  // Virtualizer for smooth 60fps rendering up to 1024 rows
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => 40, // 40px row height
-    overscan: 10,
+    overscan: 12,
   });
 
   // Calculate expected values for columns where student requested "Show Solution"
@@ -73,7 +79,6 @@ export const TruthTable: React.FC<TruthTableProps> = ({
         case 'T':
           e.preventDefault();
           onSetCellValue(colId, rowIndex, true);
-          // Advance down automatically for speed!
           if (rowIndex + 1 < rows.length) {
             setActiveCell({ rowIndex: rowIndex + 1, colId });
           }
@@ -83,7 +88,6 @@ export const TruthTable: React.FC<TruthTableProps> = ({
         case 'F':
           e.preventDefault();
           onSetCellValue(colId, rowIndex, false);
-          // Advance down automatically for speed!
           if (rowIndex + 1 < rows.length) {
             setActiveCell({ rowIndex: rowIndex + 1, colId });
           }
@@ -173,13 +177,13 @@ export const TruthTable: React.FC<TruthTableProps> = ({
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
       {/* Table Toolbar */}
-      <div className="px-4 py-3 bg-slate-50/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
             Truth Workspace
           </span>
           <span className="text-xs text-slate-400 dark:text-slate-500">
-            • {variables.length} base variable{variables.length > 1 ? 's' : ''} • {rows.length} rows •{' '}
+            • {variables.length} base variables • {rows.length} rows •{' '}
             {studentColumns.length} student column{studentColumns.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -190,7 +194,7 @@ export const TruthTable: React.FC<TruthTableProps> = ({
               <button
                 type="button"
                 onClick={onCheckAllColumns}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs active:scale-95 transition"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs active:scale-95 transition cursor-pointer"
                 title="Check all student columns"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
@@ -200,7 +204,7 @@ export const TruthTable: React.FC<TruthTableProps> = ({
               <button
                 type="button"
                 onClick={onResetWorkspace}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer"
                 title="Clear all student columns"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -212,8 +216,8 @@ export const TruthTable: React.FC<TruthTableProps> = ({
           <button
             type="button"
             onClick={onAddColumn}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-xs active:scale-95 transition"
-            title="Add a new custom column for your intermediate or final formula"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-xs active:scale-95 transition cursor-pointer"
+            title="Add a custom column to evaluate your intermediate or final formula"
           >
             <Plus className="w-4 h-4" />
             <span>Add Column</span>
@@ -221,72 +225,71 @@ export const TruthTable: React.FC<TruthTableProps> = ({
         </div>
       </div>
 
-      {/* Scrollable & Virtualized Table Workspace */}
+      {/* Scrollable & Virtualized Table Workspace with Pixel-Perfect Flex Columns */}
       <div
         ref={tableContainerRef}
-        className="overflow-auto max-h-[600px] border-b border-slate-200 dark:border-slate-800 relative math-grid-bg"
+        className="overflow-auto max-h-[600px] border-b border-slate-200 dark:border-slate-800 relative bg-white dark:bg-slate-950 focus:outline-none"
         tabIndex={0}
       >
-        <table className="w-full border-collapse text-left text-sm table-fixed min-w-[700px]">
-          {/* Sticky Table Header */}
-          <thead className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 shadow-xs border-b border-slate-300 dark:border-slate-700">
-            <tr>
-              {/* Row index column header */}
-              <th className="w-12 px-2 py-3 text-center text-xs font-mono font-medium text-slate-400 dark:text-slate-500 border-r border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 sticky left-0 z-30">
-                #
-              </th>
+        <div className="w-fit min-w-full">
+          {/* Sticky Header with matching flex columns */}
+          <div className="sticky top-0 z-20 flex bg-slate-100 dark:bg-slate-900 border-b border-slate-300 dark:border-slate-700 select-none">
+            {/* Row index # */}
+            <div className={`${W_INDEX} h-14 flex items-center justify-center text-xs font-mono font-bold text-slate-500 dark:text-slate-400 border-r border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 sticky left-0 z-30`}>
+              #
+            </div>
 
-              {/* Locked Base Variable Headers */}
-              {variables.map((variable) => (
-                <th
-                  key={variable}
-                  className="w-16 px-3 py-3 text-center font-mono font-bold text-base text-indigo-700 dark:text-indigo-300 border-r border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-900/90"
-                >
-                  <div className="flex items-center justify-center gap-1">
-                    <span>{variable}</span>
-                    <span title="Locked base variable column">
-                      <Lock className="w-2.5 h-2.5 text-slate-400 dark:text-slate-500" />
-                    </span>
-                  </div>
-                </th>
-              ))}
+            {/* Base Variables (p, q, r, ...) */}
+            {variables.map((variable) => (
+              <div
+                key={variable}
+                className={`${W_VAR} h-14 flex items-center justify-center font-mono font-bold text-base text-indigo-700 dark:text-indigo-300 border-r border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-900`}
+              >
+                <div className="flex items-center gap-1">
+                  <span>{variable}</span>
+                  <span title="Locked base variable column">
+                    <Lock className="w-2.5 h-2.5 text-slate-400 dark:text-slate-500" />
+                  </span>
+                </div>
+              </div>
+            ))}
 
-              {/* Editable Student Column Headers */}
-              {studentColumns.map((col) => (
-                <th
-                  key={col.id}
-                  className="w-48 p-0 border-r border-slate-200 dark:border-slate-800 align-top"
-                >
-                  <StudentColumnHeader
-                    column={col}
-                    onUpdateHeader={onUpdateColumnHeader}
-                    onRemove={onRemoveColumn}
-                    onCheck={onCheckColumn}
-                    onToggleShowSolution={onToggleShowSolution}
-                    onFill={onFillColumn}
-                  />
-                </th>
-              ))}
+            {/* Student Column Headers */}
+            {studentColumns.map((col) => (
+              <div
+                key={col.id}
+                className={`${W_STUDENT} border-r border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900`}
+              >
+                <StudentColumnHeader
+                  column={col}
+                  onUpdateHeader={onUpdateColumnHeader}
+                  onRemove={onRemoveColumn}
+                  onCheck={onCheckColumn}
+                  onToggleShowSolution={onToggleShowSolution}
+                  onFill={onFillColumn}
+                />
+              </div>
+            ))}
 
-              {/* "+ Add Column" Header Button */}
-              <th className={`${studentColumns.length === 0 ? 'w-64' : 'w-40'} px-3 py-3 align-middle text-center bg-indigo-50/40 dark:bg-indigo-950/20`}>
-                <button
-                  type="button"
-                  onClick={onAddColumn}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-indigo-500 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-xl text-xs font-bold shadow-2xs transition active:scale-95"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>{studentColumns.length === 0 ? '+ Add First Column (e.g. ¬t)' : '+ Add Column'}</span>
-                </button>
-              </th>
-            </tr>
-          </thead>
+            {/* "+ Add Column" Header Button */}
+            <div className={`${studentColumns.length === 0 ? 'w-64' : W_ADD} h-14 p-2 flex items-center justify-center bg-indigo-50/50 dark:bg-indigo-950/30 border-r border-slate-300 dark:border-slate-700`}>
+              <button
+                type="button"
+                onClick={onAddColumn}
+                className="w-full h-full flex items-center justify-center gap-1.5 px-3 border border-dashed border-indigo-500 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 rounded-xl text-xs font-bold shadow-2xs transition active:scale-95 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>{studentColumns.length === 0 ? '+ Add First Column' : '+ Add Column'}</span>
+              </button>
+            </div>
+          </div>
 
-          {/* Virtualized Body */}
-          <tbody
+          {/* Virtualized Body Rows with Exact Matching Flex Columns */}
+          <div
             style={{
               height: `${rowVirtualizer.getTotalSize()}px`,
               position: 'relative',
+              width: '100%',
             }}
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
@@ -294,45 +297,44 @@ export const TruthTable: React.FC<TruthTableProps> = ({
               const rowAssignment = rows[rowIndex];
 
               return (
-                <tr
+                <div
                   key={rowIndex}
                   style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: '100%',
                     height: `${virtualRow.size}px`,
                     transform: `translateY(${virtualRow.start}px)`,
                   }}
-                  className={`flex items-center border-b border-slate-100 dark:border-slate-800/60 transition-colors ${
+                  className={`flex items-center border-b border-slate-200 dark:border-slate-800 ${
                     rowIndex % 2 === 0
                       ? 'bg-white dark:bg-slate-950'
-                      : 'bg-slate-50/50 dark:bg-slate-900/40'
+                      : 'bg-slate-50/70 dark:bg-slate-900/40'
                   }`}
                 >
-                  {/* Row Index */}
-                  <td className="w-12 h-10 flex items-center justify-center font-mono text-xs text-slate-400 dark:text-slate-500 border-r border-slate-200/80 dark:border-slate-800/80 bg-inherit sticky left-0 z-10 shrink-0">
+                  {/* Row Index # */}
+                  <div className={`${W_INDEX} h-10 flex items-center justify-center font-mono text-xs text-slate-400 dark:text-slate-500 border-r border-slate-200 dark:border-slate-800 bg-inherit sticky left-0 z-10`}>
                     {rowIndex + 1}
-                  </td>
+                  </div>
 
                   {/* Variable Cells (Read-Only) */}
                   {variables.map((variable) => {
                     const val = rowAssignment[variable];
                     return (
-                      <td
+                      <div
                         key={variable}
-                        className="w-16 h-10 flex items-center justify-center font-mono font-bold text-sm border-r border-slate-200/80 dark:border-slate-800/80 shrink-0"
+                        className={`${W_VAR} h-10 flex items-center justify-center font-mono font-bold text-sm border-r border-slate-200 dark:border-slate-800`}
                       >
                         <span
-                          className={`w-6 h-6 flex items-center justify-center rounded ${
+                          className={`w-6 h-6 flex items-center justify-center rounded font-bold ${
                             val
-                              ? 'text-emerald-700 dark:text-emerald-400 font-bold'
-                              : 'text-rose-700 dark:text-rose-400 font-bold'
+                              ? 'text-emerald-700 dark:text-emerald-400'
+                              : 'text-rose-700 dark:text-rose-400'
                           }`}
                         >
                           {val ? 'T' : 'F'}
                         </span>
-                      </td>
+                      </div>
                     );
                   })}
 
@@ -344,9 +346,9 @@ export const TruthTable: React.FC<TruthTableProps> = ({
                     const expected = expectedValuesMap[col.id]?.[rowIndex];
 
                     return (
-                      <td
+                      <div
                         key={col.id}
-                        className="w-48 h-10 p-0 border-r border-slate-200/80 dark:border-slate-800/80 shrink-0"
+                        className={`${W_STUDENT} h-10 p-0 border-r border-slate-200 dark:border-slate-800`}
                       >
                         <TableCell
                           value={cellVal}
@@ -355,37 +357,34 @@ export const TruthTable: React.FC<TruthTableProps> = ({
                           showSolution={col.checkResult?.showSolution}
                           onClick={() => {
                             setActiveCell({ rowIndex, colId: col.id });
-                            // Clicking toggles value: null -> true -> false -> null
                             const next =
                               cellVal === null ? true : cellVal === true ? false : null;
                             onSetCellValue(col.id, rowIndex, next);
                           }}
                           onKeyDown={(e) => handleCellKeyDown(e, rowIndex, col.id)}
                         />
-                      </td>
+                      </div>
                     );
                   })}
 
                   {/* Empty cell under add column */}
-                  {studentColumns.length === 0 ? (
-                    <td className="w-64 h-10 border-b border-slate-200/40 dark:border-slate-800/40 shrink-0 flex items-center justify-center text-[11px] text-slate-400 dark:text-slate-500 italic select-none">
-                      {rowIndex === 0 ? '👈 Click "+ Add First Column" above' : '—'}
-                    </td>
-                  ) : (
-                    <td className="w-40 h-10 border-b border-slate-200/40 dark:border-slate-800/40 shrink-0" />
-                  )}
-                </tr>
+                  <div
+                    className={`${studentColumns.length === 0 ? 'w-64' : W_ADD} h-10 border-r border-slate-100 dark:border-slate-800/40 flex items-center justify-center text-[11px] text-slate-400 dark:text-slate-500 italic select-none`}
+                  >
+                    {studentColumns.length === 0 && rowIndex === 0 ? '👈 Click "+ Add First Column"' : ''}
+                  </div>
+                </div>
               );
             })}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
 
       {/* Table Footer Instructions */}
       <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-3">
           <span>
-            💡 <strong>Tip:</strong> Click cell or use <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">T</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">F</kbd> keys.
+            💡 <strong>Tip:</strong> Click a cell or use <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">T</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">F</kbd> keys.
           </span>
           <span className="hidden md:inline">
             Use <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">↑</kbd> <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">↓</kbd> <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">←</kbd> <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">→</kbd> to navigate.

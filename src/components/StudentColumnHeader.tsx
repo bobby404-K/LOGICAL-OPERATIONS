@@ -80,7 +80,7 @@ export const StudentColumnHeader: React.FC<StudentColumnHeaderProps> = ({
   const { checkResult } = column;
 
   return (
-    <div className="flex flex-col justify-between h-full p-2.5 bg-slate-50 dark:bg-slate-900/90 border-r border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 min-w-[180px]">
+    <div className="flex flex-col justify-between h-full p-2.5 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
       {/* Top Header Label & Menu */}
       <div className="flex items-center justify-between gap-1 mb-2">
         {isEditing ? (
