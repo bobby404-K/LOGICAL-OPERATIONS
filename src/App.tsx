@@ -97,7 +97,7 @@ export function App() {
         )}
 
         {/* Expression Editor Section */}
-        <section className="space-y-3">
+        <section>
           <ExpressionInput
             expression={expression}
             setExpression={setExpression}
@@ -105,27 +105,31 @@ export function App() {
             parseError={parseError}
             variables={variables}
             rowCount={baseRows.length}
+            onInsertSymbol={insertOperator}
           />
-
-          <OperatorToolbar onInsert={insertOperator} />
         </section>
 
-        {/* Educational Principle Callout Banner */}
-        <div className="bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200/60 dark:border-indigo-800/40 rounded-xl p-3 flex items-start sm:items-center justify-between gap-3 text-xs text-indigo-900 dark:text-indigo-200">
-          <div className="flex items-center gap-2">
-            <Info className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
-            <span>
-              <strong>Educational Canvas:</strong> The application generates only the basic variable combinations (
-              <span className="font-mono font-semibold">{variables.join(', ')}</span>). Click{' '}
-              <strong className="underline underline-offset-2">+ Add Column</strong> to construct intermediate expressions and evaluate truth values manually!
+        {/* 3-Step Simple Guide */}
+        <div className="flex flex-wrap items-center justify-between px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-2xs">
+          <div className="flex flex-wrap items-center gap-2 text-slate-600 dark:text-slate-300">
+            <span className="font-bold text-indigo-600 dark:text-indigo-400">3-Step Flow:</span>
+            <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              1. Type Formula
+            </span>
+            <span className="text-slate-400">→</span>
+            <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              2. Base variables auto-generated
+            </span>
+            <span className="text-slate-400">→</span>
+            <span className="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">
+              3. Click "+ Add Column" to solve
             </span>
           </div>
           <button
             onClick={() => setHelpModalOpen(true)}
-            className="hidden md:flex items-center gap-1 text-indigo-600 dark:text-indigo-400 hover:underline shrink-0 font-medium"
+            className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
           >
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>Shortcuts</span>
+            Shortcuts
           </button>
         </div>
 
