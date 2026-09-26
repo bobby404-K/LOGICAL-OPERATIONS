@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Copy, Check, Download, FileText } from 'lucide-react';
+import { X, Copy, Check, Download } from 'lucide-react';
 import { StudentColumn, TruthAssignment, VariableName } from '../types';
 import { formatTableToCSV, formatTableToMarkdown } from '../utils/formatters';
 

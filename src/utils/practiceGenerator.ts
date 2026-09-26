@@ -1,4 +1,4 @@
-import { PracticeProblem, VariableName } from '../types';
+import { PracticeProblem } from '../types';
 
 export const CURATED_PRACTICE_PROBLEMS: PracticeProblem[] = [
   {
@@ -94,10 +94,48 @@ export const CURATED_PRACTICE_PROBLEMS: PracticeProblem[] = [
     ],
     recommendedSteps: ['¬r', 'p ⊕ q', 'q ∨ ¬r', '(p ⊕ q) ∧ (q ∨ ¬r)'],
   },
+  {
+    id: 'prob-8',
+    title: 'Prove Material Implication Equivalence',
+    difficulty: 'Beginner',
+    expression: '(p → q) ↔ (¬p ∨ q)',
+    description: 'Construct the step-by-step columns to prove that (p → q) is logically equivalent to (¬p ∨ q).',
+    hints: [
+      'First construct the left-hand side column: (p → q).',
+      'Then construct ¬p, and use it with column q to compute (¬p ∨ q).',
+      'Finally evaluate the biconditional ↔. If the law holds, every row will evaluate to True (a tautology)!'
+    ],
+    recommendedSteps: ['p → q', '¬p', '¬p ∨ q', '(p → q) ↔ (¬p ∨ q)'],
+  },
+  {
+    id: 'prob-9',
+    title: "Prove De Morgan's Law of Conjunction",
+    difficulty: 'Intermediate',
+    expression: '¬(p ∧ q) ↔ (¬p ∨ ¬q)',
+    description: "Prove De Morgan's First Law by building both the negated conjunction and the disjunction of negations.",
+    hints: [
+      'Evaluate the left-hand side: start with (p ∧ q), then invert it to get ¬(p ∧ q).',
+      'Evaluate the right-hand side: find ¬p and ¬q, then form (¬p ∨ ¬q).',
+      'Compare both sides with the biconditional ↔ to prove equivalence across all 4 rows.'
+    ],
+    recommendedSteps: ['p ∧ q', '¬(p ∧ q)', '¬p', '¬q', '¬p ∨ ¬q', '¬(p ∧ q) ↔ (¬p ∨ ¬q)'],
+  },
+  {
+    id: 'prob-10',
+    title: 'Prove the Absorption Law',
+    difficulty: 'Intermediate',
+    expression: '(p ∨ (p ∧ q)) ↔ p',
+    description: 'Prove that the proposition p absorbs the conjunction (p ∧ q) under disjunction.',
+    hints: [
+      'First calculate the inner conjunction (p ∧ q).',
+      'Combine variable p with (p ∧ q) using disjunction (OR) to get p ∨ (p ∧ q).',
+      'Finally, check equivalence with variable p using ↔.'
+    ],
+    recommendedSteps: ['p ∧ q', 'p ∨ (p ∧ q)', '(p ∨ (p ∧ q)) ↔ p'],
+  },
 ];
 
 export function generateRandomProblem(difficulty: 'Beginner' | 'Intermediate' | 'Advanced'): PracticeProblem {
-  const varsPool: VariableName[] = ['p', 'q', 'r', 's'];
   const binaryOps = ['∧', '∨', '→', '⊕'];
 
   if (difficulty === 'Beginner') {

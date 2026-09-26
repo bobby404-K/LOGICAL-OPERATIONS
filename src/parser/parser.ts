@@ -1,5 +1,5 @@
 import { ASTNode, Token, VariableName, ALLOWED_VARIABLES } from '../types';
-import { tokenize, TokenizerError } from './tokenizer';
+import { tokenize } from './tokenizer';
 
 export class ParserError extends Error {
   position: number;

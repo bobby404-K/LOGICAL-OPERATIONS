@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { X, CheckCircle2, BookOpen } from 'lucide-react';
+import { X, CheckCircle2 } from 'lucide-react';
 import { PracticeProblem } from '../types';
 import { parseLogicalExpression } from '../parser/parser';
 import { generateTruthAssignments } from '../truth-table/generator';
@@ -16,10 +16,9 @@ export const SolutionGuideModal: React.FC<SolutionGuideModalProps> = ({
   onClose,
   problem,
 }) => {
-  if (!isOpen || !problem) return null;
-
-  // Compute solution columns
+  // Compute solution columns unconditionally before any early returns
   const solutionData = useMemo(() => {
+    if (!problem) return null;
     try {
       const rootRes = parseLogicalExpression(problem.expression);
       const rows = generateTruthAssignments(rootRes.variables);
@@ -48,6 +47,8 @@ export const SolutionGuideModal: React.FC<SolutionGuideModalProps> = ({
       return null;
     }
   }, [problem]);
+
+  if (!isOpen || !problem) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs">

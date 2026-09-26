@@ -1,5 +1,5 @@
 import React, { RefObject } from 'react';
-import { CheckCircle2, AlertCircle, X, Hash, Binary } from 'lucide-react';
+import { CheckCircle2, AlertCircle, X } from 'lucide-react';
 import { VariableName } from '../types';
 
 interface ExpressionInputProps {

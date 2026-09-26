@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { X, BookOpen, Sparkles, Check, Info } from 'lucide-react';
+import { X, BookOpen, Sparkles, Info, Scale } from 'lucide-react';
 import { OperatorType } from '../types';
+import { LawsReference } from './LawsReference';
 
 interface LearnModalProps {
   isOpen: boolean;
   onClose: () => void;
+  activeTab?: 'operators' | 'laws';
+  onTabChange?: (tab: 'operators' | 'laws') => void;
+  onLoadLawIntoWorkspace?: (tautologyExpr: string, lhs?: string, rhs?: string) => void;
 }
 
 interface OperatorGuide {
@@ -139,7 +143,17 @@ const GUIDES: OperatorGuide[] = [
   },
 ];
 
-export const LearnModal: React.FC<LearnModalProps> = ({ isOpen, onClose }) => {
+export const LearnModal: React.FC<LearnModalProps> = ({
+  isOpen,
+  onClose,
+  activeTab = 'operators',
+  onTabChange,
+  onLoadLawIntoWorkspace,
+}) => {
+  const [internalTab, setInternalTab] = useState<'operators' | 'laws'>('operators');
+  const currentTab = onTabChange ? activeTab : internalTab;
+  const setTab = onTabChange ?? setInternalTab;
+
   const [selectedOp, setSelectedOp] = useState<OperatorType>('IMPLIES');
   // Interactive testing state
   const [testP, setTestP] = useState(true);
@@ -175,33 +189,72 @@ export const LearnModal: React.FC<LearnModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
-              <BookOpen className="w-4 h-4" />
+              {currentTab === 'operators' ? (
+                <BookOpen className="w-4 h-4" />
+              ) : (
+                <Scale className="w-4 h-4" />
+              )}
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                Discrete Math Logical Operators
+                Discrete Mathematics Reference
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Interactive reference guide & truth tables
+                Interactive guide for connectives, truth tables & equivalence laws
               </p>
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          {/* Segmented Tab Switcher */}
+          <div className="flex items-center gap-3 self-end sm:self-center">
+            <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium">
+              <button
+                onClick={() => setTab('operators')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  currentTab === 'operators'
+                    ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs font-semibold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                }`}
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Operators</span>
+              </button>
+              <button
+                onClick={() => setTab('laws')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  currentTab === 'laws'
+                    ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs font-semibold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                }`}
+              >
+                <Scale className="w-3.5 h-3.5" />
+                <span>Laws of Logic</span>
+                <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-bold">
+                  24
+                </span>
+              </button>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              aria-label="Close dialog"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
-        {/* Modal Body: Left sidebar of operators, Right content */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* Modal Body: Switch between Laws Reference and Operators */}
+        {currentTab === 'laws' ? (
+          <LawsReference onLoadLawIntoWorkspace={onLoadLawIntoWorkspace} />
+        ) : (
+          <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Operator Selector List */}
           <div className="w-full md:w-56 p-3 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 overflow-y-auto space-y-1 bg-slate-50/50 dark:bg-slate-950/40">
             {GUIDES.map((g) => (
@@ -411,6 +464,7 @@ export const LearnModal: React.FC<LearnModalProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
         </div>
+      )}
       </div>
     </div>
   );

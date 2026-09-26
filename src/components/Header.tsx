@@ -7,6 +7,7 @@ import {
   Download,
   GraduationCap,
   Sparkles,
+  Scale,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -14,7 +15,7 @@ interface HeaderProps {
   toggleTheme: () => void;
   mode: 'workspace' | 'practice';
   setMode: (mode: 'workspace' | 'practice') => void;
-  onOpenLearn: () => void;
+  onOpenLearn: (tab?: 'operators' | 'laws') => void;
   onOpenHelp: () => void;
   onOpenExport: () => void;
 }
@@ -79,14 +80,24 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Learn Mode Button */}
+          {/* Logic Laws Reference Button */}
           <button
-            onClick={onOpenLearn}
+            onClick={() => onOpenLearn('laws')}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition"
+            title="Browse Propositional Logic Laws & Equivalences"
+          >
+            <Scale className="w-4 h-4 text-indigo-500" />
+            <span className="hidden lg:inline">Logic Laws</span>
+          </button>
+
+          {/* Learn Operators Button */}
+          <button
+            onClick={() => onOpenLearn('operators')}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition"
             title="Learn operators and truth tables"
           >
             <BookOpen className="w-4 h-4 text-indigo-500" />
-            <span className="hidden md:inline">Learn Operators</span>
+            <span className="hidden md:inline">Operators</span>
           </button>
 
           {/* Export Button */}
