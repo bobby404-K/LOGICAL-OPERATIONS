@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, BookOpen, Sparkles, Check, Info } from 'lucide-react';
+import { X, BookOpen, Sparkles, Info } from 'lucide-react';
 import { OperatorType } from '../types';
 
 interface LearnModalProps {

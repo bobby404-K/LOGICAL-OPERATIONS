@@ -1,4 +1,4 @@
-import { PracticeProblem, VariableName } from '../types';
+import { PracticeProblem } from '../types';
 
 export const CURATED_PRACTICE_PROBLEMS: PracticeProblem[] = [
   {
@@ -97,7 +97,6 @@ export const CURATED_PRACTICE_PROBLEMS: PracticeProblem[] = [
 ];
 
 export function generateRandomProblem(difficulty: 'Beginner' | 'Intermediate' | 'Advanced'): PracticeProblem {
-  const varsPool: VariableName[] = ['p', 'q', 'r', 's'];
   const binaryOps = ['∧', '∨', '→', '⊕'];
 
   if (difficulty === 'Beginner') {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CellValue } from '../types';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 interface TableCellProps {
   value: CellValue;

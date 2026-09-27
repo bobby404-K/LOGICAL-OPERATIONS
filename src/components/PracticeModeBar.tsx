@@ -3,7 +3,6 @@ import {
   Lightbulb,
   RotateCcw,
   CheckCircle,
-  HelpCircle,
   Dices,
   ChevronDown,
   Sparkles,
@@ -48,10 +47,6 @@ export const PracticeModeBar: React.FC<PracticeModeBarProps> = ({
     Intermediate: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
     Advanced: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
   };
-
-  const hasConstructedTarget = studentColumns.some(
-    (col) => col.header.replace(/\s+/g, '') === currentPractice.expression.replace(/\s+/g, '')
-  );
 
   return (
     <div className="bg-gradient-to-r from-indigo-900/10 via-purple-900/10 to-indigo-900/10 dark:from-indigo-950/40 dark:via-purple-950/40 dark:to-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
@@ -134,7 +129,7 @@ export const PracticeModeBar: React.FC<PracticeModeBarProps> = ({
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             <span>Recommended column sequence:</span>
           </span>
-          {currentPractice.recommendedSteps.map((step, idx) => {
+          {currentPractice.recommendedSteps.map((step) => {
             const alreadyAdded = studentColumns.some(
               (c) => c.header.replace(/\s+/g, '') === step.replace(/\s+/g, '')
             );

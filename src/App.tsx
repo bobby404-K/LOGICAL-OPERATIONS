@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLogicTable } from './store/useLogicStore';
 import { Header } from './components/Header';
 import { ExpressionInput } from './components/ExpressionInput';
-import { OperatorToolbar } from './components/OperatorToolbar';
 import { PresetsBar } from './components/PresetsBar';
 import { PracticeModeBar } from './components/PracticeModeBar';
 import { TruthTable } from './components/TruthTable';
@@ -10,7 +9,6 @@ import { LearnModal } from './components/LearnModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { ExportModal } from './components/ExportModal';
 import { SolutionGuideModal } from './components/SolutionGuideModal';
-import { Info, HelpCircle } from 'lucide-react';
 
 export function App() {
   const {
