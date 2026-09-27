@@ -6,7 +6,7 @@
 ![React 19](https://img.shields.io/badge/React-19-61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)
 ![Vite](https://img.shields.io/badge/Vite-8-646cff)
-![Vitest](https://img.shields.io/badge/Tests-28%20Passed-emerald)
+![Vitest](https://img.shields.io/badge/Tests-54%20Passed-emerald)
 
 ---
 
@@ -22,26 +22,39 @@ The student manually constructs all intermediate columns (e.g. $\neg t$, $p \lan
 
 ## ✨ Features
 
+- **Laws of Propositional Logic (24+ Curated Laws)**:
+  - Comprehensive reference of classical discrete mathematics laws:
+    - **De Morgan's Laws** (conjunction & disjunction negations)
+    - **Distributive Laws** (AND over OR, OR over AND)
+    - **Conditional Equivalences** (Material Implication, Contrapositive, Negation of Implication)
+    - **Absorption & Exportation Laws**
+    - **Basic Equivalences** (Idempotent, Double Negation, Commutative, Associative)
+    - **Biconditional & XOR Normal Forms**
+    - **Rules of Inference & Tautologies** (Modus Ponens, Modus Tollens, Hypothetical Syllogism, Disjunctive Syllogism)
+  - **Live Interactive Sandbox**: Toggle $p, q, r$ inputs to watch LHS and RHS evaluate and verify equivalence in real time.
+  - **1-Click Workspace Verification**: Load any tautological formula $(LHS \leftrightarrow RHS)$ directly into the truth table to prove it row-by-row.
+  - **Side-by-Side Comparison**: Auto-instantiates student columns for LHS and RHS to prove column equality.
 - **Base Truth-Value Generator**:
   - Automatically identifies variables in standard mathematical order ($p, q, r, s, t, u, v, w, x, y$).
   - Generates exactly $2^n$ rows in standard discrete math truth table order.
   - Supports up to **10 variables ($1024$ rows)** with virtualized 60fps scrolling.
 - **Manual Student Columns**:
   - Click `+ Add Column` to create custom columns.
-  - In-place expression editor with quick math symbol inserter.
+  - In-place expression editor with integrated math symbol inserter.
   - Editable $T$ / $F$ cells via click, dropdown, or rapid keyboard shortcuts.
 - **Educational Verification (Check Column)**:
   - Validates student values row-by-row against AST evaluation.
   - Provides pedagogical feedback (`✓ Correct`, `✗ 3 incorrect`, `5 unfilled`).
   - **Does NOT reveal correct values** unless the student explicitly clicks `Show Solution`.
 - **Practice Mode**:
-  - Built-in curated challenges for Beginner, Intermediate, and Advanced tiers.
+  - Built-in curated challenges for Beginner, Intermediate, and Advanced tiers (including proving De Morgan, Implication, and Absorption laws).
   - Dynamic random problem generator.
   - Multi-tier progressive hints that guide without spoiling.
   - Recommended sub-step sequences to scaffold column construction.
   - Full step-by-step solution guide modal.
-- **Learn Mode**:
-  - Interactive reference cards for all 8 connectives.
+- **Learn Mode & Reference Center**:
+  - Dual-tab learning center for Connectives/Operators and Equivalence Laws.
+  - Interactive reference cards for all 8 connectives with truth tables.
   - Live interactive sandbox: toggle $p$ and $q$ inputs to watch truth values compute in real time.
   - Discrete math insights (e.g. *Vacuous truth* in material implication, functional completeness of NAND/NOR).
 - **Exporting & Shortcuts**:
@@ -94,7 +107,7 @@ Open `http://localhost:5173` in your browser.
 ```bash
 npm test
 ```
-Runs 28 automated tests across expression tokenization, recursive descent parsing, operator precedence, AST evaluation, and discrete math truth table generation.
+Runs 54 automated tests across expression tokenization, recursive descent parsing, operator precedence, AST evaluation, discrete math truth table generation, and propositional logic equivalence laws.
 
 ### Production Build
 ```bash
