@@ -34,6 +34,7 @@ export function useLogicTable() {
 
   // Modals
   const [isLearnModalOpen, setLearnModalOpen] = useState(false);
+  const [learnModalTab, setLearnModalTab] = useState<'operators' | 'laws'>('operators');
   const [isHelpModalOpen, setHelpModalOpen] = useState(false);
   const [isExportModalOpen, setExportModalOpen] = useState(false);
 
@@ -42,6 +43,27 @@ export function useLogicTable() {
 
   // Active cell keyboard focus coordinate
   const [activeCell, setActiveCell] = useState<ActiveCellCoordinate | null>(null);
+
+  const openLearnModal = useCallback((tab: 'operators' | 'laws' = 'operators') => {
+    setLearnModalTab(tab);
+    setLearnModalOpen(true);
+  }, []);
+
+  const loadLawIntoWorkspace = useCallback((tautologyExpr: string, lhs?: string, rhs?: string) => {
+    setExpression(tautologyExpr);
+    setMode('workspace');
+    if (lhs && rhs) {
+      const col1Id = `col-${Date.now()}-lhs`;
+      const col2Id = `col-${Date.now() + 1}-rhs`;
+      setStudentColumns([
+        { id: col1Id, header: lhs, cells: {} },
+        { id: col2Id, header: rhs, cells: {} },
+      ]);
+    } else {
+      setStudentColumns([]);
+    }
+    setLearnModalOpen(false);
+  }, []);
 
   // Practice Mode state
   const [currentPractice, setCurrentPractice] = useState<PracticeProblem | null>(
@@ -340,6 +362,10 @@ export function useLogicTable() {
     setMode,
     isLearnModalOpen,
     setLearnModalOpen,
+    learnModalTab,
+    setLearnModalTab,
+    openLearnModal,
+    loadLawIntoWorkspace,
     isHelpModalOpen,
     setHelpModalOpen,
     isExportModalOpen,

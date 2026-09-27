@@ -22,6 +22,10 @@ export function App() {
     setMode,
     isLearnModalOpen,
     setLearnModalOpen,
+    learnModalTab,
+    setLearnModalTab,
+    openLearnModal,
+    loadLawIntoWorkspace,
     isHelpModalOpen,
     setHelpModalOpen,
     isExportModalOpen,
@@ -61,7 +65,7 @@ export function App() {
         toggleTheme={toggleTheme}
         mode={mode}
         setMode={setMode}
-        onOpenLearn={() => setLearnModalOpen(true)}
+        onOpenLearn={openLearnModal}
         onOpenHelp={() => setHelpModalOpen(true)}
         onOpenExport={() => setExportModalOpen(true)}
       />
@@ -182,6 +186,9 @@ export function App() {
       <LearnModal
         isOpen={isLearnModalOpen}
         onClose={() => setLearnModalOpen(false)}
+        activeTab={learnModalTab}
+        onTabChange={setLearnModalTab}
+        onLoadLawIntoWorkspace={loadLawIntoWorkspace}
       />
 
       <ShortcutsModal
