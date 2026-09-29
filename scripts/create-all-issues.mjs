@@ -323,7 +323,7 @@ async function main() {
   const existingIssues = new Map();
   let page = 1;
   while (true) {
-    const issues = await api(`/issues?state=all&per_page=100&page=${page}`);
+    const issues = await api(`/issues?state=open&per_page=100&page=${page}`);
     if (!issues.length) break;
     for (const iss of issues) {
       if (!iss.pull_request) {
@@ -335,9 +335,20 @@ async function main() {
   }
   console.log(`Found ${existingIssues.size} existing issues.`);
 
+  const limitArg = process.argv.find(a => a.startsWith('--limit='));
+  const limitVal = limitArg ? parseInt(limitArg.split('=')[1], 10) : (process.argv[2] && !process.argv[2].startsWith('--') ? parseInt(process.argv[2], 10) : Infinity);
+  if (Number.isFinite(limitVal)) {
+    console.log(`Creation limit set to: ${limitVal} new issues.`);
+  }
+
   let createdCount = 0;
 
   for (let i = 0; i < allItems.length; i++) {
+    if (createdCount >= limitVal) {
+      console.log(`\nReached batch limit of ${limitVal} issues created.`);
+      break;
+    }
+
     const item = allItems[i];
     const existing = existingIssues.get(item.title);
 
@@ -356,8 +367,8 @@ async function main() {
       console.log(`[${i + 1}/${allItems.length}] Created Issue #${issue.number}: ${item.title}`);
       createdCount++;
 
-      // Small delay to ensure respectful API usage and prevent secondary rate limit
-      await sleep(850);
+      // 1-second delay to ensure respectful API usage and comply with GitHub's mutation limit
+      await sleep(1000);
 
     } catch (err) {
       console.error(`[${i + 1}/${allItems.length}] Error creating issue for ${item.branch}:`, err.message);
