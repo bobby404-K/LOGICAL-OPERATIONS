@@ -29,8 +29,8 @@ export function useLogicTable() {
     '(p ∧ r ∧ s) ∨ (q ∧ t) ∨ (r ∧ ¬t)'
   );
 
-  // Mode: Workspace or Practice
-  const [mode, setMode] = useState<'workspace' | 'practice'>('workspace');
+  // Mode: Workspace, Practice, Concepts Explorer, or Agent Hub
+  const [mode, setMode] = useState<'workspace' | 'practice' | 'concepts' | 'agent'>('workspace');
 
   // Modals
   const [isLearnModalOpen, setLearnModalOpen] = useState(false);

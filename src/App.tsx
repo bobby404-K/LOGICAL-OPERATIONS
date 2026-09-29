@@ -9,6 +9,8 @@ import { LearnModal } from './components/LearnModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { ExportModal } from './components/ExportModal';
 import { SolutionGuideModal } from './components/SolutionGuideModal';
+import { ConceptExplorer } from './components/ConceptExplorer';
+import { AgentHub } from './components/AgentHub';
 
 export function App() {
   const {
@@ -72,6 +74,12 @@ export function App() {
 
       {/* Main Workspace Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+        {/* Discrete Mathematics Concept Explorer Mode */}
+        {mode === 'concepts' && <ConceptExplorer />}
+
+        {/* In-Repo Autonomous Coding Agent Hub Mode */}
+        {mode === 'agent' && <AgentHub />}
+
         {/* Practice Mode Banner (if in practice mode) */}
         {mode === 'practice' && (
           <PracticeModeBar
@@ -98,36 +106,39 @@ export function App() {
           />
         )}
 
-        {/* Expression Editor Section */}
-        <section>
-          <ExpressionInput
-            expression={expression}
-            setExpression={setExpression}
-            inputRef={expressionInputRef}
-            parseError={parseError}
-            variables={variables}
-            rowCount={baseRows.length}
-            onInsertSymbol={insertOperator}
-          />
-        </section>
+        {/* Expression Editor & Truth Table (Only shown for Workspace & Practice modes) */}
+        {(mode === 'workspace' || mode === 'practice') && (
+          <>
+            {/* Expression Editor Section */}
+            <section>
+              <ExpressionInput
+                expression={expression}
+                setExpression={setExpression}
+                inputRef={expressionInputRef}
+                parseError={parseError}
+                variables={variables}
+                rowCount={baseRows.length}
+                onInsertSymbol={insertOperator}
+              />
+            </section>
 
-        {/* 3-Step Simple Guide */}
-        <div className="flex flex-wrap items-center justify-between px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-2xs">
-          <div className="flex flex-wrap items-center gap-2 text-slate-600 dark:text-slate-300">
-            <span className="font-bold text-indigo-600 dark:text-indigo-400">3-Step Flow:</span>
-            <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-              1. Type Formula
-            </span>
-            <span className="text-slate-400">→</span>
-            <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-              2. Base variables auto-generated
-            </span>
-            <span className="text-slate-400">→</span>
-            <span className="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">
-              3. Click "+ Add Column" to solve
-            </span>
-          </div>
-          <button
+            {/* 3-Step Simple Guide */}
+            <div className="flex flex-wrap items-center justify-between px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs shadow-2xs">
+              <div className="flex flex-wrap items-center gap-2 text-slate-600 dark:text-slate-300">
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">3-Step Flow:</span>
+                <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  1. Type Formula
+                </span>
+                <span className="text-slate-400">→</span>
+                <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  2. Base variables auto-generated
+                </span>
+                <span className="text-slate-400">→</span>
+                <span className="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">
+                  3. Click "+ Add Column" to solve
+                </span>
+              </div>
+              <button
             onClick={() => setHelpModalOpen(true)}
             className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
           >
@@ -154,6 +165,8 @@ export function App() {
             onResetWorkspace={resetWorkspace}
           />
         </section>
+        </>
+        )}
       </main>
 
       {/* Clean Footer */}

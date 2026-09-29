@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   BookOpen,
   HelpCircle,
@@ -8,13 +7,15 @@ import {
   GraduationCap,
   Sparkles,
   Scale,
+  Compass,
+  Bot
 } from 'lucide-react';
 
 interface HeaderProps {
   theme: 'dark' | 'light';
   toggleTheme: () => void;
-  mode: 'workspace' | 'practice';
-  setMode: (mode: 'workspace' | 'practice') => void;
+  mode: 'workspace' | 'practice' | 'concepts' | 'agent';
+  setMode: (mode: 'workspace' | 'practice' | 'concepts' | 'agent') => void;
   onOpenLearn: (tab?: 'operators' | 'laws') => void;
   onOpenHelp: () => void;
   onOpenExport: () => void;
@@ -47,34 +48,56 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
-              Interactive Truth Table Workspace
+              Interactive Truth Table & Discrete Math Hub
             </p>
           </div>
         </div>
 
         {/* Center Mode Switcher */}
-        <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60 text-sm font-medium">
+        <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs sm:text-sm font-medium">
           <button
             onClick={() => setMode('workspace')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
               mode === 'workspace'
-                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm font-semibold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-3.5 h-3.5" />
             <span>Workspace</span>
           </button>
           <button
             onClick={() => setMode('practice')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
               mode === 'practice'
-                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm font-semibold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
-            <GraduationCap className="w-4 h-4" />
-            <span>Practice Mode</span>
+            <GraduationCap className="w-3.5 h-3.5" />
+            <span>Practice</span>
+          </button>
+          <button
+            onClick={() => setMode('concepts')}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
+              mode === 'concepts'
+                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+            }`}
+          >
+            <Compass className="w-3.5 h-3.5" />
+            <span>Concepts Hub</span>
+          </button>
+          <button
+            onClick={() => setMode('agent')}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
+              mode === 'agent'
+                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-sm font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+            }`}
+          >
+            <Bot className="w-3.5 h-3.5" />
+            <span>Agent Hub</span>
           </button>
         </div>
 

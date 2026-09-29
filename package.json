@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "agent:solve": "node scripts/autonomous-agent.mjs --solve-count=1",
+    "agent:batch": "node scripts/autonomous-agent.mjs",
+    "agent:all": "node scripts/autonomous-agent.mjs --solve-count=100"
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.14.13",

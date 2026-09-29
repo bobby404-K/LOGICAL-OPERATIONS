@@ -1,0 +1,54 @@
+name: Autonomous Coding Agent
+
+on:
+  issues:
+    types: [opened, labeled]
+  workflow_dispatch:
+    inputs:
+      solve_count:
+        description: 'Number of issues to solve in this run'
+        required: false
+        default: '1'
+  schedule:
+    # Optional scheduled run every midnight UTC
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  solve-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure Git Committer
+        run: |
+          git config --global user.name "Autonomous Coding Agent"
+          git config --global user.email "agent@logical-operations.local"
+
+      - name: Run Autonomous Coding Agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          SOLVE_COUNT="${{ github.event.inputs.solve_count || '1' }}"
+          node scripts/autonomous-agent.mjs --solve-count=$SOLVE_COUNT
+
+      - name: Run Verification Test Suite
+        run: npm test
