@@ -295,8 +295,15 @@ async function solveConceptPR(issue) {
     // Branch delete note
   }
 
-  execSync('git checkout main', { cwd: ROOT_DIR, stdio: 'pipe' });
-  execSync('git pull origin main', { cwd: ROOT_DIR, stdio: 'pipe' });
+  try {
+    execSync('git checkout main', { cwd: ROOT_DIR, stdio: 'pipe' });
+    execSync('git pull origin main', { cwd: ROOT_DIR, stdio: 'pipe' });
+  } catch (err) {
+    try {
+      fs.rmSync(path.join(ROOT_DIR, '.git', 'FETCH_HEAD'), { force: true });
+      execSync('git pull origin main', { cwd: ROOT_DIR, stdio: 'pipe' });
+    } catch {}
+  }
   try {
     execSync(`git branch -D ${branchName}`, { cwd: ROOT_DIR, stdio: 'pipe' });
   } catch {}
