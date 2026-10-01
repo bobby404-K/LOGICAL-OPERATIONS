@@ -190,7 +190,7 @@ describe('Concept ${id}: ${humanTitle}', () => {
 
 async function mergePullRequest(prNumber, branchName) {
   let attempts = 0;
-  while (attempts < 5) {
+  while (attempts < 8) {
     attempts++;
     try {
       const merge = await api(`/pulls/${prNumber}/merge`, 'PUT', {
@@ -199,9 +199,9 @@ async function mergePullRequest(prNumber, branchName) {
       });
       return merge;
     } catch (err) {
-      if (attempts < 5 && (err.status === 405 || err.message.includes('not mergeable'))) {
-        console.log(`PR #${prNumber} not ready to merge yet (attempt ${attempts}/5). Retrying in 2 seconds...`);
-        await sleep(2000);
+      if (attempts < 8 && (err.status === 405 || err.status === 409 || err.message.includes('not mergeable') || err.message.includes('Base branch was modified'))) {
+        console.log(`PR #${prNumber} not ready to merge yet (attempt ${attempts}/8). Retrying in 2.5 seconds...`);
+        await sleep(2500);
       } else {
         throw err;
       }
@@ -281,7 +281,7 @@ async function solveConceptPR(issue) {
   console.log(`✅ Opened PR #${pr.number}: ${pr.html_url}`);
 
   // Short pause for GitHub merge readiness check
-  await sleep(1500);
+  await sleep(2500);
 
   // 6. Merge Pull Request
   console.log(`🔀 Merging PR #${pr.number} into main...`);
